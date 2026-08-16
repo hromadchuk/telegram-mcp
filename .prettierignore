@@ -1,0 +1,7 @@
+node_modules
+.yarn
+.vercel
+backend/dist
+frontend/dist
+shared/dist
+yarn.lock

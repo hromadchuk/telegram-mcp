@@ -24,7 +24,7 @@ export function App() {
       <h1>Telegram MCP</h1>
       <p>React frontend and NestJS backend.</p>
       <p className={error ? 'error' : undefined}>
-          {error ?? (health ? `Backend: ${health.status}` : 'Checking backend…')}
+        {error ?? (health ? `Backend: ${health.status}` : 'Checking backend…')}
       </p>
     </main>
   );

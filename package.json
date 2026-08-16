@@ -11,11 +11,21 @@
   "scripts": {
     "build": "yarn workspace @repo/shared build && yarn workspace @repo/backend build && yarn workspace @repo/frontend build",
     "dev": "yarn workspaces foreach -A -p -i -v --include @repo/frontend --include @repo/backend run dev",
-    "typecheck": "tsc --noEmit -p tsconfig.json && yarn workspace @repo/shared typecheck && yarn workspace @repo/backend typecheck && yarn workspace @repo/frontend typecheck"
+    "typecheck": "tsc --noEmit -p tsconfig.json && yarn workspace @repo/shared typecheck && yarn workspace @repo/backend typecheck && yarn workspace @repo/frontend typecheck",
+    "lint": "eslint ."
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@types/node": "^26.2.0",
+    "eslint": "10.8.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.6",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.4",
+    "globals": "17.11.0",
+    "prettier": "3.9.6",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.67.0",
     "vercel": "^59.1.3"
   }
 }

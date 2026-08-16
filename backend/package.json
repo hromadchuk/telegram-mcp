@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "yarn workspace @repo/shared build && tsc -p tsconfig.json",
-    "dev": "yarn workspace @repo/shared build && tsc -p tsconfig.json && node dist/main.js",
+    "build": "yarn workspace @repo/shared build && nest build --path tsconfig.json",
+    "dev": "yarn workspace @repo/shared build && nest start --watch --preserveWatchOutput --path tsconfig.json",
     "typecheck": "yarn workspace @repo/shared build && tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
@@ -19,6 +19,6 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.24",
     "@types/node": "^26.2.0",
-    "typescript": "^7.0.2"
+    "typescript": "5.9.3"
   }
 }

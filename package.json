@@ -1,0 +1,21 @@
+{
+  "name": "telegram-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "yarn@4.18.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "build": "yarn workspace @repo/shared build && yarn workspace @repo/backend build && yarn workspace @repo/frontend build",
+    "dev": "yarn workspaces foreach -A -p -i -v --include @repo/frontend --include @repo/backend run dev",
+    "typecheck": "tsc --noEmit -p tsconfig.json && yarn workspace @repo/shared typecheck && yarn workspace @repo/backend typecheck && yarn workspace @repo/frontend typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2",
+    "vercel": "^59.1.3"
+  }
+}

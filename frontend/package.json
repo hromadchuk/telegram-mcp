@@ -9,9 +9,12 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@mtcute/web": "0.31.0",
     "@repo/shared": "workspace:*",
+    "qr-code-styling": "1.9.2",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-router": "7.18.2"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",

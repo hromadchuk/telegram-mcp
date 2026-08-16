@@ -11,6 +11,18 @@
   },
   "rewrites": [
     {
+      "source": "/.well-known/:path*",
+      "destination": "/api"
+    },
+    {
+      "source": "/oauth/:path*",
+      "destination": "/api"
+    },
+    {
+      "source": "/mcp",
+      "destination": "/api"
+    },
+    {
       "source": "/api/:path*",
       "destination": "/api"
     },

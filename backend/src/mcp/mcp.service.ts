@@ -5,7 +5,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { AccessToken } from '../auth/token.service.js';
 import { isDev } from '../common/utils.js';
-import { TelegramClientService } from '../telegram/telegram-client.service.js';
+import { McpToolRegistry } from './mcp-tool.registry.js';
 
 type McpRequest = IncomingMessage & {
   body?: unknown;
@@ -13,7 +13,7 @@ type McpRequest = IncomingMessage & {
 
 @Injectable()
 export class McpService {
-  public constructor(private readonly telegramClientService: TelegramClientService) {}
+  public constructor(private readonly toolRegistry: McpToolRegistry) {}
 
   public async handle(req: McpRequest, res: ServerResponse, accessToken: AccessToken): Promise<void> {
     const server = this.createServer(accessToken);
@@ -55,48 +55,7 @@ export class McpService {
       version: '0.0.0',
     });
 
-    server.registerTool(
-      'server_info',
-      {
-        title: 'Server info',
-        description: 'Returns basic information about the Telegram MCP server.',
-        annotations: {
-          readOnlyHint: true,
-        },
-      },
-      async () => ({
-        content: [
-          {
-            type: 'text',
-            text: 'Telegram MCP server is running and the Telegram session is authorized.',
-          },
-        ],
-      }),
-    );
-
-    server.registerTool(
-      'get_me',
-      {
-        title: 'Get current Telegram user',
-        description: 'Returns the public profile of the Telegram account connected to this MCP server.',
-        annotations: {
-          readOnlyHint: true,
-        },
-      },
-      async () => {
-        const profile = await this.telegramClientService.getMe(accessToken);
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(profile, null, 2),
-            },
-          ],
-          structuredContent: profile,
-        };
-      },
-    );
+    this.toolRegistry.register(server, accessToken);
 
     return server;
   }

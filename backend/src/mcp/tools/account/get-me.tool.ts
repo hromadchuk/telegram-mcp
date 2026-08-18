@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import type { CallToolResult } from '@modelcontextprotocol/server';
 import type { TelegramClient } from '@mtcute/node';
 
-import { McpTool } from '../../decorators/mcp-tool.decorator.js';
-import { TelegramMcpToolHandler } from '../../mcp-tool.handler.js';
+import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
 import { jsonResult } from '../../tool-result.js';
 
 @McpTool({
   name: 'get_me',
   title: 'Get current user',
   description: 'Returns the public profile of the connected account.',
+  requiresClient: true,
   annotations: {
     readOnlyHint: true,
   },
 })
 @Injectable()
-export class GetMeTool extends TelegramMcpToolHandler {
+export class GetMeTool implements TelegramMcpToolHandler {
   public async execute(client: TelegramClient): Promise<CallToolResult> {
     const user = await client.getMe();
     const profile = {

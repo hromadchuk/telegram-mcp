@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import type { CallToolResult } from '@modelcontextprotocol/server';
 import type { TelegramClient } from '@mtcute/node';
 
-import { McpTool } from '../../decorators/mcp-tool.decorator.js';
-import { TelegramMcpToolHandler } from '../../mcp-tool.handler.js';
+import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
 import { jsonResult } from '../../tool-result.js';
 
 @McpTool({
   name: 'get_contacts',
   title: 'Get contacts',
   description: 'Returns contacts saved in the connected account.',
+  requiresClient: true,
   annotations: {
     readOnlyHint: true,
   },
 })
 @Injectable()
-export class GetContactsTool extends TelegramMcpToolHandler {
+export class GetContactsTool implements TelegramMcpToolHandler {
   public async execute(client: TelegramClient): Promise<CallToolResult> {
     const users = await client.getContacts();
     const contacts = users.map((user) => ({

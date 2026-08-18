@@ -252,11 +252,7 @@ export class OAuthService {
     const resource = this.requireString(body.resource, 'resource');
     const refreshToken = this.tokenService.open(encodedRefreshToken, 'refresh_token');
 
-    if (
-      refreshToken.clientId !== clientId ||
-      refreshToken.resource !== resource ||
-      resource !== this.resource
-    ) {
+    if (refreshToken.clientId !== clientId || refreshToken.resource !== resource || resource !== this.resource) {
       throw new Error('Refresh token parameters do not match.');
     }
 

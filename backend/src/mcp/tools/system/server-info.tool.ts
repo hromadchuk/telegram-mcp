@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { CallToolResult } from '@modelcontextprotocol/server';
 
-import { McpTool } from '../../decorators/mcp-tool.decorator.js';
-import { McpToolHandler } from '../../mcp-tool.handler.js';
+import { McpTool, type McpToolHandler } from '../../decorators/mcp-tool.decorator.js';
 import { textResult } from '../../tool-result.js';
 
 @McpTool({
@@ -14,7 +13,7 @@ import { textResult } from '../../tool-result.js';
   },
 })
 @Injectable()
-export class ServerInfoTool extends McpToolHandler {
+export class ServerInfoTool implements McpToolHandler {
   public execute(): CallToolResult {
     return textResult('The MCP server is running and the session is authorized.');
   }

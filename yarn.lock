@@ -1264,7 +1264,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mtcute/core@npm:^0.31.0":
+"@mtcute/core@npm:0.31.0, @mtcute/core@npm:^0.31.0":
   version: 0.31.0
   resolution: "@mtcute/core@npm:0.31.0"
   dependencies:
@@ -1835,6 +1835,7 @@ __metadata:
   dependencies:
     "@modelcontextprotocol/node": "npm:2.0.0"
     "@modelcontextprotocol/server": "npm:2.0.0"
+    "@mtcute/core": "npm:0.31.0"
     "@mtcute/node": "npm:0.31.0"
     "@nestjs/cli": "npm:^11.0.24"
     "@nestjs/common": "npm:^11.2.1"

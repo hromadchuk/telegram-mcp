@@ -4,10 +4,17 @@ import { McpServer, type CallToolResult } from '@modelcontextprotocol/server';
 import { MemoryStorage, TelegramClient } from '@mtcute/node';
 
 import type { AccessToken } from '../auth/token.service.js';
-import { MCP_TOOL_METADATA, type McpToolOptions } from './decorators/mcp-tool.decorator.js';
-import { McpToolHandler, TelegramMcpToolHandler } from './mcp-tool.handler.js';
+import {
+  MCP_TOOL_METADATA,
+  type McpToolHandler,
+  type McpToolOptions,
+  type TelegramMcpToolHandler,
+} from './decorators/mcp-tool.decorator.js';
 
-type ToolHandler = McpToolHandler | TelegramMcpToolHandler;
+interface ToolProvider {
+  handler: McpToolHandler | TelegramMcpToolHandler;
+  options: McpToolOptions;
+}
 
 @Injectable()
 export class McpToolRegistry {
@@ -16,12 +23,7 @@ export class McpToolRegistry {
   public register(server: McpServer, accessToken: AccessToken): void {
     const names = new Set<string>();
 
-    for (const handler of this.getHandlers()) {
-      const options = Reflect.getMetadata(MCP_TOOL_METADATA, handler.constructor) as McpToolOptions | undefined;
-      if (!options) {
-        continue;
-      }
-
+    for (const { handler, options } of this.getTools()) {
       if (names.has(options.name)) {
         throw new Error(`MCP tool ${options.name} is registered more than once.`);
       }
@@ -35,29 +37,51 @@ export class McpToolRegistry {
       };
 
       if (options.inputSchema) {
-        server.registerTool(
-          options.name,
-          { ...config, inputSchema: options.inputSchema },
-          async (input) => this.execute(handler, accessToken, input),
+        server.registerTool(options.name, { ...config, inputSchema: options.inputSchema }, async (input) =>
+          this.execute(handler, options.requiresClient, accessToken, input),
         );
       } else {
-        server.registerTool(options.name, config, async () => this.execute(handler, accessToken, undefined));
+        server.registerTool(options.name, config, async () => {
+          return this.execute(handler, options.requiresClient, accessToken, undefined);
+        });
       }
     }
   }
 
-  private getHandlers(): ToolHandler[] {
-    return this.discoveryService
-      .getProviders()
-      .map(({ instance }) => instance)
-      .filter((instance): instance is ToolHandler => {
-        return instance instanceof McpToolHandler || instance instanceof TelegramMcpToolHandler;
+  private getTools(): ToolProvider[] {
+    const tools: ToolProvider[] = [];
+
+    for (const { instance } of this.discoveryService.getProviders()) {
+      if (!instance || typeof instance !== 'object') {
+        continue;
+      }
+
+      const options = Reflect.getOwnMetadata(MCP_TOOL_METADATA, instance.constructor) as McpToolOptions | undefined;
+      if (!options) {
+        continue;
+      }
+
+      if (!('execute' in instance) || typeof instance.execute !== 'function') {
+        throw new Error(`MCP tool ${options.name} must implement execute().`);
+      }
+
+      tools.push({
+        handler: instance as McpToolHandler | TelegramMcpToolHandler,
+        options,
       });
+    }
+
+    return tools;
   }
 
-  private async execute(handler: ToolHandler, accessToken: AccessToken, input: unknown): Promise<CallToolResult> {
-    if (!(handler instanceof TelegramMcpToolHandler)) {
-      return handler.execute(input);
+  private async execute(
+    handler: McpToolHandler | TelegramMcpToolHandler,
+    requiresClient: boolean | undefined,
+    accessToken: AccessToken,
+    input: unknown,
+  ): Promise<CallToolResult> {
+    if (!requiresClient) {
+      return (handler as McpToolHandler).execute(input);
     }
 
     const client = new TelegramClient({
@@ -69,7 +93,7 @@ export class McpToolRegistry {
 
     try {
       await client.importSession(accessToken.session);
-      return await handler.execute(client, input);
+      return await (handler as TelegramMcpToolHandler).execute(client, input);
     } finally {
       await client.destroy();
     }

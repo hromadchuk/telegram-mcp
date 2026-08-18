@@ -24,10 +24,12 @@ export class McpController {
       accessToken = this.oauthService.readAccessToken(req);
     } catch {
       const metadataUrl = `${this.oauthService.getOrigin()}/.well-known/oauth-protected-resource/mcp`;
+
       res.statusCode = 401;
       res.setHeader('WWW-Authenticate', `Bearer resource_metadata="${metadataUrl}", scope="telegram"`);
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ error: 'unauthorized' }));
+
       return;
     }
 

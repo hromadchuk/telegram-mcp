@@ -57,6 +57,7 @@ export class McpToolRegistry {
       }
 
       const options = Reflect.getOwnMetadata(MCP_TOOL_METADATA, instance.constructor) as McpToolOptions | undefined;
+
       if (!options) {
         continue;
       }
@@ -93,6 +94,7 @@ export class McpToolRegistry {
 
     try {
       await client.importSession(accessToken.session);
+
       return await (handler as TelegramMcpToolHandler).execute(client, input);
     } finally {
       await client.destroy();

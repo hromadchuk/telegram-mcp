@@ -7,5 +7,6 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   const { getVercelHandler } = await import('../backend/dist/vercel-handler.js');
   const app = await getVercelHandler();
+
   return app(req, res);
 }

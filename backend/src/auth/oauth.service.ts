@@ -113,6 +113,7 @@ export class OAuthService {
       }
 
       this.validateRedirectUri(value);
+
       return value;
     });
 
@@ -144,6 +145,7 @@ export class OAuthService {
 
   public completeAuthorization(body: CompleteAuthorizationRequest): { redirectTo: string } {
     const apiId = Number(body.apiId);
+
     if (!Number.isInteger(apiId) || apiId <= 0 || !body.apiHash?.trim() || !body.session?.trim()) {
       throw new Error('Telegram credentials are invalid.');
     }
@@ -157,6 +159,7 @@ export class OAuthService {
     }
 
     const client = this.tokenService.open(body.clientId, 'oauth_client');
+
     if (!client.redirectUris.includes(body.redirectUri)) {
       throw new Error('The redirect URI is not registered for this client.');
     }
@@ -180,8 +183,8 @@ export class OAuthService {
       },
       AUTHORIZATION_CODE_LIFETIME,
     );
-
     const callback = new URL(body.redirectUri);
+
     callback.searchParams.set('code', code);
     callback.searchParams.set('iss', this.origin);
     if (body.state) {
@@ -205,11 +208,13 @@ export class OAuthService {
 
   public readAccessToken(req: IncomingMessage): AccessToken & { iat: number; exp: number } {
     const authorization = req.headers.authorization;
+
     if (!authorization?.startsWith('Bearer ')) {
       throw new Error('Bearer token is missing.');
     }
 
     const token = this.tokenService.open(authorization.slice('Bearer '.length), 'access_token');
+
     if (token.resource !== this.resource) {
       throw new Error('The token audience is invalid.');
     }
@@ -239,6 +244,7 @@ export class OAuthService {
     }
 
     const actualChallenge = createHash('sha256').update(verifier).digest('base64url');
+
     if (!this.safeEqual(actualChallenge, authorizationCode.codeChallenge)) {
       throw new Error('PKCE verification failed.');
     }
@@ -286,6 +292,7 @@ export class OAuthService {
   private normalizeScope(scope: string | undefined): string {
     const requested = scope?.trim() || DEFAULT_SCOPE;
     const scopes = requested.split(/\s+/);
+
     if (scopes.some((value) => value !== DEFAULT_SCOPE)) {
       throw new Error('An unsupported OAuth scope was requested.');
     }
@@ -316,6 +323,7 @@ export class OAuthService {
   private safeEqual(left: string, right: string): boolean {
     const leftBuffer = Buffer.from(left);
     const rightBuffer = Buffer.from(right);
+
     return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
   }
 }

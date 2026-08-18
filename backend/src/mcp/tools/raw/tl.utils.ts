@@ -1,4 +1,5 @@
 import { Long, type tl } from '@mtcute/core';
+import { INVALID_PARAMS, ProtocolError } from '@modelcontextprotocol/server';
 
 import type { TlArgument, TlCatalogService, TlMethod } from './tl-catalog.service.js';
 
@@ -20,7 +21,7 @@ const primitiveTypes = new Set([
 
 export function createTlRequest(catalog: TlCatalogService, method: TlMethod, params: JsonObject): tl.RpcMethod {
   if (method.generics?.length) {
-    throw new Error(`Generic method ${method.name} cannot be called through call_method.`);
+    throw new ProtocolError(INVALID_PARAMS, `Generic method ${method.name} cannot be called through call_method.`);
   }
 
   return decodeObject(catalog, method.name, method.arguments, params) as unknown as tl.RpcMethod;
@@ -65,6 +66,7 @@ function decodeObject(
   input: JsonObject,
 ): JsonObject {
   const values = { ...input };
+
   delete values._;
 
   const allowedNames = new Set(
@@ -73,19 +75,21 @@ function decodeObject(
   const unknownNames = Object.keys(values).filter((name) => !allowedNames.has(name));
 
   if (unknownNames.length) {
-    throw new Error(`Unknown parameter(s) for ${constructorName}: ${unknownNames.join(', ')}`);
+    throw new ProtocolError(INVALID_PARAMS, `Unknown parameter(s) for ${constructorName}: ${unknownNames.join(', ')}`);
   }
 
   const result: JsonObject = { _: constructorName };
 
   for (const argument of argumentsSchema) {
-    if (argument.type === '#') continue;
+    if (argument.type === '#') {
+      continue;
+    }
 
     const value = values[argument.name];
 
     if (value === undefined) {
       if (!argument.typeModifiers?.predicate) {
-        throw new Error(`Missing required parameter ${constructorName}.${argument.name}`);
+        throw new ProtocolError(INVALID_PARAMS, `Missing required parameter ${constructorName}.${argument.name}`);
       }
       continue;
     }
@@ -103,7 +107,10 @@ function decodeObject(
 
 function decodeArgument(catalog: TlCatalogService, argument: TlArgument, value: unknown, path: string): unknown {
   if (argument.typeModifiers?.isVector) {
-    if (!Array.isArray(value)) throw new Error(`${path} must be an array.`);
+    if (!Array.isArray(value)) {
+      throw new ProtocolError(INVALID_PARAMS, `${path} must be an array.`);
+    }
+
     return value.map((entry, index) => decodeValue(catalog, argument.type, entry, `${path}[${index}]`));
   }
 
@@ -119,16 +126,28 @@ function decodeValue(catalog: TlCatalogService, type: string, value: unknown, pa
     case 'long':
       return decodeLong(value, path);
     case 'double':
-      if (typeof value !== 'number' || !Number.isFinite(value)) throw new Error(`${path} must be a finite number.`);
+      if (typeof value !== 'number' || !Number.isFinite(value)) {
+        throw new ProtocolError(INVALID_PARAMS, `${path} must be a finite number.`);
+      }
+
       return value;
     case 'string':
-      if (typeof value !== 'string') throw new Error(`${path} must be a string.`);
+      if (typeof value !== 'string') {
+        throw new ProtocolError(INVALID_PARAMS, `${path} must be a string.`);
+      }
+
       return value;
     case 'Bool':
-      if (typeof value !== 'boolean') throw new Error(`${path} must be a boolean.`);
+      if (typeof value !== 'boolean') {
+        throw new ProtocolError(INVALID_PARAMS, `${path} must be a boolean.`);
+      }
+
       return value;
     case 'true':
-      if (value !== true) throw new Error(`${path} can only be true when provided.`);
+      if (value !== true) {
+        throw new ProtocolError(INVALID_PARAMS, `${path} can only be true when provided.`);
+      }
+
       return true;
     case 'bytes':
       return decodeBytes(value, path);
@@ -138,18 +157,24 @@ function decodeValue(catalog: TlCatalogService, type: string, value: unknown, pa
       return decodeBytes(value, path, 32);
   }
 
-  if (type.startsWith('!')) throw new Error(`${path} uses unsupported generic type ${type}.`);
+  if (type.startsWith('!')) {
+    throw new ProtocolError(INVALID_PARAMS, `${path} uses unsupported generic type ${type}.`);
+  }
 
   if (!isObject(value) || typeof value._ !== 'string') {
     const options = catalog.getConstructors(type).map((constructor) => constructor.name);
     const suffix = options.length ? ` Available constructors: ${options.join(', ')}.` : '';
-    throw new Error(`${path} must be a TL object with a "_" constructor.${suffix}`);
+
+    throw new ProtocolError(INVALID_PARAMS, `${path} must be a TL object with a "_" constructor.${suffix}`);
   }
 
   const constructor = catalog.getConstructor(value._);
 
   if (constructor.type !== type) {
-    throw new Error(`${path} expects ${type}, but ${constructor.name} creates ${constructor.type}.`);
+    throw new ProtocolError(
+      INVALID_PARAMS,
+      `${path} expects ${type}, but ${constructor.name} creates ${constructor.type}.`,
+    );
   }
 
   return decodeObject(catalog, constructor.name, constructor.arguments, value);
@@ -157,32 +182,42 @@ function decodeValue(catalog: TlCatalogService, type: string, value: unknown, pa
 
 function requireInteger(value: unknown, path: string, minimum: number, maximum: number): number {
   if (typeof value !== 'number' || !Number.isInteger(value) || value < minimum || value > maximum) {
-    throw new Error(`${path} must be an integer from ${minimum} to ${maximum}.`);
+    throw new ProtocolError(INVALID_PARAMS, `${path} must be an integer from ${minimum} to ${maximum}.`);
   }
+
   return value;
 }
 
 function decodeLong(value: unknown, path: string): Long {
   if (typeof value === 'number') {
     if (!Number.isSafeInteger(value)) {
-      throw new Error(`${path} must be a decimal string when it exceeds JavaScript's safe integer range.`);
+      throw new ProtocolError(
+        INVALID_PARAMS,
+        `${path} must be a decimal string when it exceeds JavaScript's safe integer range.`,
+      );
     }
+
     return Long.fromNumber(value);
   }
 
   if (typeof value !== 'string' || !/^-?\d+$/.test(value)) {
-    throw new Error(`${path} must be a decimal string or a safe integer.`);
+    throw new ProtocolError(INVALID_PARAMS, `${path} must be a decimal string or a safe integer.`);
   }
+
   return Long.fromString(value);
 }
 
 function decodeBytes(value: unknown, path: string, requiredLength?: number): Uint8Array {
-  if (typeof value !== 'string' || !isBase64(value)) throw new Error(`${path} must be a base64 string.`);
+  if (typeof value !== 'string' || !isBase64(value)) {
+    throw new ProtocolError(INVALID_PARAMS, `${path} must be a base64 string.`);
+  }
+
   const bytes = Buffer.from(value, 'base64');
 
   if (requiredLength && bytes.length !== requiredLength) {
-    throw new Error(`${path} must contain exactly ${requiredLength} bytes.`);
+    throw new ProtocolError(INVALID_PARAMS, `${path} must contain exactly ${requiredLength} bytes.`);
   }
+
   return bytes;
 }
 

@@ -1,6 +1,6 @@
 import type { TelegramClient } from '@mtcute/node';
 import { Injectable } from '@nestjs/common';
-import type { CallToolResult } from '@modelcontextprotocol/server';
+import { INVALID_REQUEST, ProtocolError, type CallToolResult } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
@@ -37,7 +37,7 @@ export class CallMethodTool implements TelegramMcpToolHandler {
     const blockedReason = getBlockedMethodReason(methodName);
 
     if (blockedReason) {
-      throw new Error(`${methodName} is blocked: ${blockedReason}`);
+      throw new ProtocolError(INVALID_REQUEST, `${methodName} is blocked: ${blockedReason}`);
     }
 
     const method = this.catalog.getMethod(methodName);

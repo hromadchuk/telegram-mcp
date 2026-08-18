@@ -73,6 +73,7 @@ export function ConnectPage() {
       await destroyClient();
 
       const numericApiId = Number(apiId);
+
       if (!Number.isInteger(numericApiId) || numericApiId <= 0) {
         throw new Error('API ID must be a positive integer.');
       }
@@ -135,8 +136,10 @@ export function ConnectPage() {
     event.preventDefault();
 
     const request = passwordRequestRef.current;
+
     if (!request) {
       setError('Telegram connection was lost. Start again.');
+
       return;
     }
 
@@ -191,6 +194,7 @@ export function ConnectPage() {
 
   function abortConnection() {
     const reason = new DOMException('Telegram connection cancelled.', 'AbortError');
+
     abortControllerRef.current?.abort(reason);
     abortControllerRef.current = null;
     passwordRequestRef.current?.reject(reason);
@@ -200,6 +204,7 @@ export function ConnectPage() {
   async function destroyClient() {
     abortConnection();
     const client = clientRef.current;
+
     clientRef.current = null;
     await client?.destroy();
   }

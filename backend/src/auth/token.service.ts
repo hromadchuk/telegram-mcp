@@ -77,12 +77,14 @@ export class TokenService {
     expectedKind: T,
   ): StoredToken<Extract<TokenPayload, { kind: T }>> {
     const [version, encodedIv, encodedCiphertext, encodedTag, extra] = token.split('.');
+
     if (version !== TOKEN_VERSION || !encodedIv || !encodedCiphertext || !encodedTag || extra) {
       throw new Error('Malformed token.');
     }
 
     try {
       const decipher = createDecipheriv('aes-256-gcm', this.getKey(), Buffer.from(encodedIv, 'base64url'));
+
       decipher.setAAD(TOKEN_AAD);
       decipher.setAuthTag(Buffer.from(encodedTag, 'base64url'));
       const plaintext = Buffer.concat([
@@ -103,8 +105,8 @@ export class TokenService {
 
   private getKey(): Buffer {
     const encodedKey = this.configService.getOrThrow<string>('TOKEN_SECRET');
-
     const key = Buffer.from(encodedKey, 'base64url');
+
     if (key.length !== 32) {
       throw new Error('TOKEN_SECRET must be a base64url-encoded 32-byte key.');
     }

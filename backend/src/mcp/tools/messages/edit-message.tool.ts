@@ -1,0 +1,38 @@
+import { Injectable } from '@nestjs/common';
+import type { CallToolResult } from '@modelcontextprotocol/server';
+import type { TelegramClient } from '@mtcute/node';
+import { z } from 'zod';
+
+import { serializeMessage } from '../../common/serializers/message.serializer.js';
+import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { jsonResult } from '../../tool-result.js';
+
+const inputSchema = z.object({
+  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+  message_id: z.number().int().positive(),
+  text: z.string().min(1),
+  disable_web_preview: z.boolean().optional(),
+});
+
+@McpTool({
+  name: 'edit_message',
+  title: 'Edit message',
+  description: 'Edits the text or caption of a sent message.',
+  requiresClient: true,
+  inputSchema,
+  annotations: { destructiveHint: true, idempotentHint: true },
+})
+@Injectable()
+export class EditMessageTool implements TelegramMcpToolHandler {
+  public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
+    const { chat_id, message_id, text, disable_web_preview } = inputSchema.parse(input);
+    const message = await client.editMessage({
+      chatId: chat_id,
+      message: message_id,
+      text,
+      disableWebPreview: disable_web_preview,
+    });
+
+    return jsonResult({ message: serializeMessage(message) });
+  }
+}

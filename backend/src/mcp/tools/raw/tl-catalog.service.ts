@@ -1,5 +1,6 @@
 import apiSchema from '@mtcute/core/tl/api-schema.json' with { type: 'json' };
 import { Injectable } from '@nestjs/common';
+import { INVALID_PARAMS, ProtocolError } from '@modelcontextprotocol/server';
 
 export interface TlArgument {
   name: string;
@@ -53,8 +54,10 @@ export class TlCatalogService {
   );
   private readonly constructorsByType = this.constructors.reduce((index, constructor) => {
     const entries = index.get(constructor.type) ?? [];
+
     entries.push(constructor);
     index.set(constructor.type, entries);
+
     return index;
   }, new Map<string, TlConstructor[]>());
 
@@ -66,7 +69,7 @@ export class TlCatalogService {
     const method = this.methodsByName.get(name);
 
     if (!method) {
-      throw new Error(`Unknown Telegram API method: ${name}`);
+      throw new ProtocolError(INVALID_PARAMS, `Unknown Telegram API method: ${name}`);
     }
 
     return method;
@@ -76,7 +79,7 @@ export class TlCatalogService {
     const constructor = this.constructorsByName.get(name);
 
     if (!constructor) {
-      throw new Error(`Unknown Telegram API constructor: ${name}`);
+      throw new ProtocolError(INVALID_PARAMS, `Unknown Telegram API constructor: ${name}`);
     }
 
     return constructor;
@@ -107,9 +110,18 @@ export class TlCatalogService {
   private score(method: TlMethod, query: string): number {
     const name = this.normalize(method.name);
 
-    if (name === query) return 0;
-    if (name.endsWith(query)) return 1;
-    if (name.includes(query)) return 2;
+    if (name === query) {
+      return 0;
+    }
+
+    if (name.endsWith(query)) {
+      return 1;
+    }
+
+    if (name.includes(query)) {
+      return 2;
+    }
+
     return 3;
   }
 

@@ -40,6 +40,7 @@ export class OAuthController {
   private respond(res: ServerResponse, action: () => unknown, errorCode: string): void {
     try {
       const body = action();
+
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.setHeader('Cache-Control', 'no-store');

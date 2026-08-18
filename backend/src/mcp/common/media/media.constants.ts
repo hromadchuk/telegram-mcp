@@ -1,0 +1,1 @@
+export const MAX_INLINE_MEDIA_BYTES = 3_000_000;

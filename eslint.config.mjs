@@ -11,6 +11,7 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  eslintPluginPrettierRecommended,
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
@@ -33,10 +34,29 @@ export default tseslint.config(
           varsIgnorePattern: '^_',
         },
       ],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: ['const', 'let'],
+          next: '*',
+        },
+        {
+          blankLine: 'never',
+          prev: ['const', 'let'],
+          next: ['const', 'let'],
+        },
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: 'return',
+        },
+      ],
       'react-refresh/only-export-components': 'off',
       curly: ['error', 'all'],
       'object-shorthand': ['error', 'always'],
     },
   },
-  eslintPluginPrettierRecommended,
 );

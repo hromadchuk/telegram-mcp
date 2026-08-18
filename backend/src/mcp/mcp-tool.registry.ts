@@ -90,6 +90,9 @@ export class McpToolRegistry {
       apiHash: accessToken.apiHash,
       storage: new MemoryStorage(),
       disableUpdates: true,
+      network: {
+        middlewares: [],
+      },
     });
 
     try {

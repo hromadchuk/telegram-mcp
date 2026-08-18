@@ -4,6 +4,7 @@ import { McpServer } from '@modelcontextprotocol/server';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { AccessToken } from '../auth/token.service.js';
+import { devLogging } from './mcp-dev-logging.js';
 import { McpToolRegistry } from './mcp-tool.registry.js';
 
 type McpRequest = IncomingMessage & {
@@ -23,6 +24,7 @@ export class McpService {
 
     try {
       await server.connect(transport);
+      devLogging(transport);
       await transport.handleRequest(req, res, req.body);
     } finally {
       await server.close();

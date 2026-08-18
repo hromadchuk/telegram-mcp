@@ -7,6 +7,10 @@ export function serializeMedia(media: MessageMedia): Record<string, unknown> | n
 
   const result: Record<string, unknown> = { type: media.type };
 
+  if (media.type === 'photo') {
+    result.mimeType = 'image/jpeg';
+  }
+
   if ('fileId' in media) {
     result.fileId = media.fileId;
   }

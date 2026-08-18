@@ -17,6 +17,7 @@ async function bootstrap(): Promise<RequestHandler> {
   });
 
   app.useBodyParser('json', { limit: '4mb' });
+  app.useBodyParser('urlencoded', { extended: false });
   await app.init();
 
   return app.getHttpAdapter().getInstance() as RequestHandler;

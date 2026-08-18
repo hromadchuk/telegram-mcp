@@ -12,6 +12,7 @@ async function bootstrap() {
   });
 
   app.useBodyParser('json', { limit: '4mb' });
+  app.useBodyParser('urlencoded', { extended: false });
   await app.listen(3000, '127.0.0.1');
 }
 

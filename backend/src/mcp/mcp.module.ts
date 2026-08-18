@@ -10,6 +10,9 @@ import { GetChatTool } from './tools/chats/get-chat.tool.js';
 import { GetContactsTool } from './tools/contacts/get-contacts.tool.js';
 import { GetDialogsTool } from './tools/dialogs/get-dialogs.tool.js';
 import { SearchChatsTool } from './tools/dialogs/search-chats.tool.js';
+import { GetGiftsTool } from './tools/gifts/get-gifts.tool.js';
+import { SetGiftVisibilityTool } from './tools/gifts/set-gift-visibility.tool.js';
+import { UpgradeGiftTool } from './tools/gifts/upgrade-gift.tool.js';
 import { DownloadMediaTool } from './tools/media/download-media.tool.js';
 import { SendAlbumTool } from './tools/media/send-album.tool.js';
 import { SendFileTool } from './tools/media/send-file.tool.js';
@@ -25,6 +28,8 @@ import { CallMethodTool } from './tools/raw/call-method.tool.js';
 import { GetMethodSchemaTool } from './tools/raw/get-method-schema.tool.js';
 import { SearchMethodsTool } from './tools/raw/search-methods.tool.js';
 import { TlCatalogService } from './tools/raw/tl-catalog.service.js';
+import { GetStarsBalanceTool } from './tools/stars/get-stars-balance.tool.js';
+import { GetStarsTransactionsTool } from './tools/stars/get-stars-transactions.tool.js';
 import { ServerInfoTool } from './tools/system/server-info.tool.js';
 
 @Module({
@@ -39,6 +44,9 @@ import { ServerInfoTool } from './tools/system/server-info.tool.js';
     GetContactsTool,
     GetDialogsTool,
     SearchChatsTool,
+    GetGiftsTool,
+    SetGiftVisibilityTool,
+    UpgradeGiftTool,
     DownloadMediaTool,
     SendAlbumTool,
     SendFileTool,
@@ -53,6 +61,8 @@ import { ServerInfoTool } from './tools/system/server-info.tool.js';
     CallMethodTool,
     GetMethodSchemaTool,
     SearchMethodsTool,
+    GetStarsBalanceTool,
+    GetStarsTransactionsTool,
     ServerInfoTool,
   ],
 })

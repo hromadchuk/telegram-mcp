@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Navigate } from 'react-router';
 import { MemoryStorage, TelegramClient, tl } from '@mtcute/web';
 
 import { QrCode } from './QrCode';
@@ -60,16 +61,16 @@ export function ConnectPage() {
     return () => window.clearInterval(timer);
   }, [qrExpiresAt, step]);
 
+  if (!authorizationRequest.value) {
+    return <Navigate replace to="/" />;
+  }
+
   async function submitCredentials(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      if (!authorizationRequest.value) {
-        throw new Error('Open this page from your AI agent to start authorization.');
-      }
-
       await destroyClient();
 
       const numericApiId = Number(apiId);
@@ -325,7 +326,7 @@ function parseAuthorizationRequest(): ParsedAuthorizationRequest {
   if (Object.values(required).some((value) => !value)) {
     return {
       value: null,
-      error: 'Open this page from your AI agent to start authorization.',
+      error: null,
     };
   }
 

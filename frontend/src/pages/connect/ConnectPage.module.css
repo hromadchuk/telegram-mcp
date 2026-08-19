@@ -216,7 +216,7 @@
 .qrBlock {
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: 0;
 }
 
 .qrFrame {
@@ -224,10 +224,6 @@
   width: 240px;
   height: 240px;
   place-items: center;
-  padding: 10px;
-  border: 1px solid #dfe9ee;
-  border-radius: 10px;
-  background: #fff;
 }
 
 .qrCode {

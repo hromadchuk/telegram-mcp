@@ -17,7 +17,7 @@ export function QrCode({ value }: QrCodeProps) {
       type: 'svg',
       width: 240,
       height: 240,
-      margin: 8,
+      margin: 0,
       data: value,
       image: telegramLogo,
       qrOptions: {

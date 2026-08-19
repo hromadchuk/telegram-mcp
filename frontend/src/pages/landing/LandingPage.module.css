@@ -1,0 +1,530 @@
+.page {
+  min-height: 100vh;
+  color: #232e3c;
+  background: #fff;
+}
+
+.nav,
+.hero,
+.features,
+.install,
+.opensource,
+.footer {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+  border-bottom: 1px solid #edf1f4;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #202b36;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: block;
+  width: 29px;
+  height: 29px;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.githubLink,
+.footer > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #168acd;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.githubLink img {
+  width: 15px;
+  height: 15px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  align-items: center;
+  gap: 58px;
+  padding: 78px 16px 76px;
+}
+
+.eyebrow,
+.sectionKicker {
+  margin: 0 0 14px;
+  color: #2aabee;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.eyebrow span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2aabee;
+}
+
+.hero h1,
+.sectionHeading h2,
+.opensource h2 {
+  margin: 0;
+  color: #1e2934;
+  letter-spacing: -0.04em;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 4.6vw, 50px);
+  line-height: 1.04;
+}
+
+.lead {
+  margin: 20px 0 26px;
+  color: #667887;
+  font-size: 16px;
+  line-height: 1.62;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.primaryButton,
+.darkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 17px;
+  border-radius: 7px;
+  background: #2aabee;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 150ms ease;
+}
+
+.primaryButton:hover {
+  background: #168acd;
+}
+
+.note {
+  margin: 19px 0 0;
+  color: #9aabb5;
+  font-size: 11px;
+}
+
+.demoCard {
+  overflow: hidden;
+  border: 1px solid #d9e5eb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgb(33 76 100 / 10%);
+}
+
+.demoTop {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 15px;
+  border-bottom: 1px solid #e8eff2;
+  color: #71828e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.onlineDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4cc979;
+}
+
+.demoMenu {
+  margin-left: auto;
+  color: #a4b0b7;
+  letter-spacing: 2px;
+}
+
+.chat {
+  display: grid;
+  gap: 10px;
+  min-height: 268px;
+  padding: 17px;
+  background: #edf5f8;
+}
+
+.message {
+  width: fit-content;
+  max-width: 88%;
+  padding: 9px 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.userMessage {
+  justify-self: end;
+  border-bottom-right-radius: 2px;
+  background: #d9f2fc;
+  color: #345263;
+}
+
+.aiMessage {
+  border-bottom-left-radius: 2px;
+  background: #fff;
+  color: #465963;
+  box-shadow: 0 1px 2px rgb(24 60 80 / 7%);
+}
+
+.aiMark,
+.spark,
+.check {
+  display: inline-block;
+  vertical-align: -2px;
+}
+
+.aiMark,
+.spark {
+  margin-right: 4px;
+  color: #2aabee;
+}
+
+.sentMessage {
+  color: #4e7762;
+}
+
+.check {
+  margin-right: 4px;
+  color: #45b978;
+}
+
+.demoFooter {
+  padding: 11px 15px;
+  color: #8b9aa3;
+  font-size: 11px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #edf1f4;
+  border-bottom: 1px solid #edf1f4;
+}
+
+.features article {
+  padding: 31px 27px;
+}
+
+.features article + article {
+  border-left: 1px solid #edf1f4;
+}
+
+.featureIcon {
+  color: #2aabee;
+  font-size: 23px;
+}
+
+.features h2 {
+  margin: 13px 0 6px;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+
+.features p {
+  margin: 0;
+  color: #71818d;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.install {
+  padding: 80px 0;
+}
+
+.sectionHeading {
+  max-width: 500px;
+  margin-bottom: 33px;
+}
+
+.sectionHeading h2,
+.opensource h2 {
+  font-size: 35px;
+  line-height: 1.1;
+}
+
+.sectionHeading > p:last-child {
+  margin: 13px 0 0;
+  color: #71818d;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.installGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.installCard {
+  padding: 23px;
+  border: 1px solid #dfe9ee;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.installTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clientLogo {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  place-items: center;
+  border-radius: 9px;
+  background: #f4f7f8;
+}
+
+.clientLogo img {
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
+}
+
+.installTitle h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.installTitle p {
+  margin: 2px 0 0;
+  color: #98a7b0;
+  font-size: 11px;
+}
+
+.installSteps {
+  display: grid;
+  gap: 8px;
+  margin: 21px 0 12px;
+  padding-left: 19px;
+  color: #596d79;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.installSteps li::marker {
+  color: #2aabee;
+  font-weight: 700;
+}
+
+.codeSnippet {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 7px 9px 10px;
+  border-radius: 6px;
+  background: #f1f6f8;
+}
+
+.codeSnippet code {
+  min-width: 0;
+  overflow: hidden;
+  color: #496270;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyButton {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  margin-left: auto;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: #fff;
+  color: #2aabee;
+  cursor: pointer;
+}
+
+.codeSnippet + .installSteps {
+  margin: 12px 0 21px;
+}
+
+.installHint {
+  margin: 16px 0 0;
+  color: #93a1aa;
+  font-size: 12px;
+}
+
+.opensource {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px;
+  align-items: center;
+  padding: 40px 44px;
+  border-radius: 12px;
+  background: #f0f8fb;
+}
+
+.opensourceCopy p {
+  margin: 0 0 20px;
+  color: #637682;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.darkButton {
+  background: #273b48;
+}
+
+.darkButton:hover {
+  background: #172b37;
+}
+
+.buttonGithubLogo {
+  width: 16px;
+  height: 16px;
+  filter: invert(1);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 65px;
+  padding: 22px 0 30px;
+  border-top: 1px solid #edf1f4;
+  color: #99a7af;
+  font-size: 12px;
+}
+
+.footerGithubLogo {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 760px) {
+  .nav,
+  .hero,
+  .features,
+  .install,
+  .opensource,
+  .footer {
+    width: min(100% - 32px, 560px);
+  }
+
+  .nav {
+    height: 68px;
+  }
+
+  .githubLink {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 38px;
+    padding: 56px 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(37px, 10vw, 50px);
+  }
+
+  .heroActions,
+  .install {
+    display: none;
+  }
+
+  .demoCard {
+    width: min(100%, 380px);
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .features article {
+    padding: 24px 4px;
+  }
+
+  .features article + article {
+    border-top: 1px solid #edf1f4;
+    border-left: 0;
+  }
+
+  .installGrid,
+  .opensource {
+    grid-template-columns: 1fr;
+  }
+
+  .opensource {
+    gap: 25px;
+    padding: 34px 28px;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 52px;
+  }
+
+  .footer span {
+    order: 3;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroActions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .chat {
+    min-height: 245px;
+    padding: 14px;
+  }
+
+  .message {
+    max-width: 94%;
+  }
+}

@@ -1,0 +1,14 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="telegram-mcp-gradient" x1="10" y1="8" x2="38" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF1" />
+      <stop offset="1" stop-color="#168ACD" />
+    </linearGradient>
+  </defs>
+  <g transform="rotate(-8 24 24)">
+    <path d="M14.5 2.5H33.5A12 12 0 0 1 45.5 14.5V33.5A12 12 0 0 1 33.5 45.5H7.5A5 5 0 0 1 2.5 40.5V14.5A12 12 0 0 1 14.5 2.5Z" fill="url(#telegram-mcp-gradient)" />
+    <ellipse cx="16" cy="24" rx="5.7" ry="12.8" fill="white" fill-opacity=".95" />
+    <circle cx="32" cy="16" r="5.7" fill="white" fill-opacity=".7" />
+    <circle cx="32" cy="32" r="5.7" fill="white" fill-opacity=".38" />
+  </g>
+</svg>

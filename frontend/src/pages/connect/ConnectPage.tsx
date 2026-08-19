@@ -3,6 +3,7 @@ import { Navigate } from 'react-router';
 import { MemoryStorage, TelegramClient, tl } from '@mtcute/web';
 
 import { QrCode } from './QrCode';
+import { ConnectHeader } from './components/ConnectHeader';
 import styles from './ConnectPage.module.css';
 
 type Step = 'credentials' | 'qr' | 'password';
@@ -212,102 +213,106 @@ export function ConnectPage() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.card}>
-        <h1 className={styles.title}>Create Telegram session</h1>
+      <div className={styles.shell}>
+        <ConnectHeader />
+        <section className={styles.card}>
+          <h1 className={styles.title}>Connect your Telegram</h1>
+          <p className={styles.subtitle}>Sign in to finish connecting Telegram MCP to your AI workspace.</p>
 
-        {step === 'credentials' && authorizationRequest.value && (
-          <form className={styles.form} onSubmit={submitCredentials}>
-            <p className={styles.formIntro}>
-              For security, use your own Telegram app credentials from{' '}
-              <a href="https://my.telegram.org/apps" rel="noreferrer" target="_blank">
-                my.telegram.org/apps
-              </a>
-              . This helps stop attackers from abusing shared credentials and affecting other users.
-            </p>
-
-            <label className={styles.field}>
-              <span className={styles.label}>api_id</span>
-              <input
-                className={styles.input}
-                inputMode="numeric"
-                name="apiId"
-                placeholder="20420042"
-                required
-                value={apiId}
-                onChange={(event) => setApiId(event.target.value)}
-              />
-            </label>
-
-            <label className={styles.field}>
-              <span className={styles.label}>api_hash</span>
-              <input
-                className={styles.input}
-                autoComplete="off"
-                name="apiHash"
-                placeholder="8f4c2a91d7e64b0fa5c8139e2d476b20"
-                required
-                value={apiHash}
-                onChange={(event) => setApiHash(event.target.value)}
-              />
-            </label>
-
-            <button className={styles.button} disabled={loading || !apiId.trim() || !apiHash.trim()} type="submit">
-              {loading && <span className={styles.spinner} />}
-              {loading ? 'Connecting…' : 'Sign in to Telegram with QR code'}
-            </button>
-          </form>
-        )}
-
-        {step === 'qr' && (
-          <div className={styles.qrStep}>
-            <ol className={styles.qrInstructions}>
-              <li>Open Telegram on your phone</li>
-              <li>Go to Settings → Devices → Add Device</li>
-              <li>Scan this QR code to confirm login</li>
-            </ol>
-
-            <div className={styles.qrBlock}>
-              <div className={styles.qrFrame}>
-                {qrUrl ? <QrCode value={qrUrl} /> : <span className={styles.qrLoading}>Creating QR code…</span>}
-              </div>
-
-              <p className={styles.qrStatus}>
-                {qrScanned
-                  ? 'QR code scanned. Confirm the login in Telegram.'
-                  : `QR code expires in ${formatCountdown(qrExpiresAt, now)}`}
+          {step === 'credentials' && authorizationRequest.value && (
+            <form className={styles.form} onSubmit={submitCredentials}>
+              <p className={styles.formIntro}>
+                For security, use your own Telegram app credentials from{' '}
+                <a href="https://my.telegram.org/apps" rel="noreferrer" target="_blank">
+                  my.telegram.org/apps
+                </a>
+                . This helps stop attackers from abusing shared credentials and affecting other users.
               </p>
+
+              <label className={styles.field}>
+                <span className={styles.label}>api_id</span>
+                <input
+                  className={styles.input}
+                  inputMode="numeric"
+                  name="apiId"
+                  placeholder="20420042"
+                  required
+                  value={apiId}
+                  onChange={(event) => setApiId(event.target.value)}
+                />
+              </label>
+
+              <label className={styles.field}>
+                <span className={styles.label}>api_hash</span>
+                <input
+                  className={styles.input}
+                  autoComplete="off"
+                  name="apiHash"
+                  placeholder="8f4c2a91d7e64b0fa5c8139e2d476b20"
+                  required
+                  value={apiHash}
+                  onChange={(event) => setApiHash(event.target.value)}
+                />
+              </label>
+
+              <button className={styles.button} disabled={loading || !apiId.trim() || !apiHash.trim()} type="submit">
+                {loading && <span className={styles.spinner} />}
+                {loading ? 'Connecting…' : 'Continue with QR code'}
+              </button>
+            </form>
+          )}
+
+          {step === 'qr' && (
+            <div className={styles.qrStep}>
+              <ol className={styles.qrInstructions}>
+                <li>Open Telegram on your phone</li>
+                <li>Go to Settings → Devices → Add Device</li>
+                <li>Scan this QR code to confirm login</li>
+              </ol>
+
+              <div className={styles.qrBlock}>
+                <div className={styles.qrFrame}>
+                  {qrUrl ? <QrCode value={qrUrl} /> : <span className={styles.qrLoading}>Creating QR code…</span>}
+                </div>
+
+                <p className={styles.qrStatus}>
+                  {qrScanned
+                    ? 'QR code scanned. Confirm the login in Telegram.'
+                    : `QR code expires in ${formatCountdown(qrExpiresAt, now)}`}
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 'password' && (
-          <form className={styles.form} onSubmit={submitPassword}>
-            <p className={styles.formIntro}>
-              QR code confirmed. This account has Telegram two-step verification enabled.
-            </p>
-            <label className={styles.field}>
-              <span className={styles.label}>Telegram password</span>
-              <input
-                className={styles.input}
-                autoComplete="current-password"
-                autoFocus
-                name="password"
-                required
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </label>
-            <button className={styles.button} disabled={loading} type="submit">
-              {loading ? 'Checking…' : 'Continue'}
-            </button>
-          </form>
-        )}
+          {step === 'password' && (
+            <form className={styles.form} onSubmit={submitPassword}>
+              <p className={styles.formIntro}>
+                QR code confirmed. This account has Telegram two-step verification enabled.
+              </p>
+              <label className={styles.field}>
+                <span className={styles.label}>Telegram password</span>
+                <input
+                  className={styles.input}
+                  autoComplete="current-password"
+                  autoFocus
+                  name="password"
+                  required
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </label>
+              <button className={styles.button} disabled={loading} type="submit">
+                {loading ? 'Checking…' : 'Continue'}
+              </button>
+            </form>
+          )}
 
-        {error && <p className={styles.error}>{error}</p>}
-      </section>
+          {error && <p className={styles.error}>{error}</p>}
+        </section>
 
-      <p className={styles.footer}>Credentials are encrypted and never stored on our server</p>
+        <p className={styles.footer}>Credentials are encrypted and never stored on our server</p>
+      </div>
     </main>
   );
 }

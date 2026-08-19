@@ -5,10 +5,10 @@ import { z } from 'zod';
 
 import { serializeMessage } from '../../common/serializers/message.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   message_ids: z.array(z.number().int().positive()).min(1).max(100),
 });
 
@@ -22,9 +22,13 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class GetMessagesTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, message_ids } = inputSchema.parse(input);
-    const messages = await client.getMessages(chat_id, message_ids);
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { message_ids } = params;
+    const messages = await client.getMessages(target, message_ids);
 
     return jsonResult({ messages: messages.map((message) => (message ? serializeMessage(message) : null)) });
   }

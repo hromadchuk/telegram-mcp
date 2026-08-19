@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { mediaSourceSchema, toInputFile } from '../../common/media/upload.js';
 import { serializeMessage } from '../../common/serializers/message.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
 const albumItemSchema = z.object({
@@ -13,8 +14,7 @@ const albumItemSchema = z.object({
   source: mediaSourceSchema,
   caption: z.string().optional(),
 });
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   items: z.array(albumItemSchema).min(2).max(10),
   reply_to: z.number().int().positive().optional(),
   silent: z.boolean().optional(),
@@ -30,8 +30,12 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class SendAlbumTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, items, reply_to, silent } = inputSchema.parse(input);
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { items, reply_to, silent } = params;
     const medias = items.map(({ type, source, caption }) => ({
       type: type === 'file' ? ('document' as const) : ('photo' as const),
       file: toInputFile(source),
@@ -39,7 +43,7 @@ export class SendAlbumTool implements TelegramMcpToolHandler {
       fileMime: source.mime_type,
       caption,
     }));
-    const messages = await client.sendMediaGroup(chat_id, medias, { replyTo: reply_to, silent });
+    const messages = await client.sendMediaGroup(target, medias, { replyTo: reply_to, silent });
 
     return jsonResult({ messages: messages.map(serializeMessage) });
   }

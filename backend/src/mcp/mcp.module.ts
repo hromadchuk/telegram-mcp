@@ -5,6 +5,7 @@ import { AuthModule } from '../auth/auth.module.js';
 import { McpController } from './mcp.controller.js';
 import { McpService } from './mcp.service.js';
 import { McpToolRegistry } from './mcp-tool.registry.js';
+import { PeerReferenceService } from './peer-reference.service.js';
 import { GetMeTool } from './tools/account/get-me.tool.js';
 import { GetChatTool } from './tools/chats/get-chat.tool.js';
 import { GetContactsTool } from './tools/contacts/get-contacts.tool.js';
@@ -38,6 +39,7 @@ import { ServerInfoTool } from './tools/system/server-info.tool.js';
   providers: [
     McpService,
     McpToolRegistry,
+    PeerReferenceService,
     TlCatalogService,
     GetMeTool,
     GetChatTool,

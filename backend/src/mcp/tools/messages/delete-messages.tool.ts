@@ -4,10 +4,10 @@ import type { TelegramClient } from '@mtcute/node';
 import { z } from 'zod';
 
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   message_ids: z.array(z.number().int().positive()).min(1).max(100),
   revoke: z.boolean().default(true).describe('Delete for all participants when Telegram permits it.'),
 });
@@ -22,10 +22,14 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class DeleteMessagesTool implements TelegramMcpToolHandler {
-  public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, message_ids, revoke } = inputSchema.parse(input);
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
 
-    await client.deleteMessagesById(chat_id, message_ids, { revoke });
+  public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { message_ids, revoke } = params;
+
+    await client.deleteMessagesById(target, message_ids, { revoke });
 
     return jsonResult({ deleted: message_ids });
   }

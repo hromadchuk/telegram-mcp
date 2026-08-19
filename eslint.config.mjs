@@ -35,6 +35,7 @@ export default tseslint.config(
         },
       ],
       'no-var': 'error',
+      'no-nested-ternary': 'error',
       'prefer-const': 'error',
       'padding-line-between-statements': [
         'error',

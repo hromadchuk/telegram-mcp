@@ -4,10 +4,10 @@ import type { TelegramClient } from '@mtcute/node';
 import { z } from 'zod';
 
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   max_id: z.number().int().min(0).optional().describe('Mark messages up to this ID. Omit to mark everything.'),
   clear_mentions: z.boolean().optional(),
 });
@@ -22,10 +22,14 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class MarkAsReadTool implements TelegramMcpToolHandler {
-  public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, max_id, clear_mentions } = inputSchema.parse(input);
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
 
-    await client.readHistory(chat_id, { maxId: max_id, clearMentions: clear_mentions });
+  public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { max_id, clear_mentions } = params;
+
+    await client.readHistory(target, { maxId: max_id, clearMentions: clear_mentions });
 
     return jsonResult({ success: true });
   }

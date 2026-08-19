@@ -5,10 +5,12 @@ import { z } from 'zod';
 
 import { serializeSavedStarGift } from '../../common/serializers/gift.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { peerIdSchema, peerReferenceSchema, PeerReferenceService } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
 const inputSchema = z.object({
-  owner: z.union([z.number().int(), z.string().trim().min(1)]).default('self'),
+  owner: peerIdSchema.optional(),
+  owner_ref: peerReferenceSchema.optional(),
   exclude_hidden: z.boolean().optional(),
   exclude_public: z.boolean().optional(),
   exclude_unlimited: z.boolean().optional(),
@@ -32,10 +34,16 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class GetGiftsTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
     const params = inputSchema.parse(input);
+    const owner =
+      params.owner || params.owner_ref
+        ? this.peerReferenceService.resolveOptionalTarget(params.owner, params.owner_ref)
+        : 'self';
     const gifts = await client.getSavedStarGifts({
-      owner: params.owner,
+      owner,
       excludeHidden: params.exclude_hidden,
       excludePublic: params.exclude_public,
       excludeUnlimited: params.exclude_unlimited,

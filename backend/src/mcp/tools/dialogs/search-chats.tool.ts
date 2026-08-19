@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { serializePeer } from '../../common/serializers/peer.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
 const inputSchema = z.object({
@@ -22,11 +23,18 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class SearchChatsTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
     const { query, limit } = inputSchema.parse(input);
     const messages = await client.searchGlobal({ query, limit });
     const chats = [...new Map(messages.map(({ chat }) => [`${chat.type}:${chat.id}`, chat])).values()];
 
-    return jsonResult({ chats: chats.map(serializePeer) });
+    return jsonResult({
+      chats: chats.map((chat) => ({
+        ...serializePeer(chat),
+        chat_ref: this.peerReferenceService.fromPeer(chat),
+      })),
+    });
   }
 }

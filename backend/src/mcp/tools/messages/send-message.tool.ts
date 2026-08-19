@@ -5,10 +5,10 @@ import { z } from 'zod';
 
 import { serializeMessage } from '../../common/serializers/message.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   text: z.string().min(1),
   reply_to: z.number().int().positive().optional(),
   silent: z.boolean().optional(),
@@ -18,16 +18,21 @@ const inputSchema = z.object({
 @McpTool({
   name: 'send_message',
   title: 'Send message',
-  description: 'Sends a text message to a user, group, or channel.',
+  description:
+    'Sends a text message. Prefer chat_ref returned by search_chats; @username also works. A numeric chat_id may require a cached peer.',
   requiresClient: true,
   inputSchema,
   annotations: { destructiveHint: true, openWorldHint: true },
 })
 @Injectable()
 export class SendMessageTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, text, reply_to, silent, disable_web_preview } = inputSchema.parse(input);
-    const message = await client.sendText(chat_id, text, {
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { text, reply_to, silent, disable_web_preview } = params;
+    const message = await client.sendText(target, text, {
       replyTo: reply_to,
       silent,
       disableWebPreview: disable_web_preview,

@@ -6,10 +6,10 @@ import { z } from 'zod';
 import { mediaSourceSchema, toInputFile } from '../../common/media/upload.js';
 import { serializeMessage } from '../../common/serializers/message.serializer.js';
 import { McpTool, type TelegramMcpToolHandler } from '../../decorators/mcp-tool.decorator.js';
+import { PeerReferenceService, withRequiredChatTarget } from '../../peer-reference.service.js';
 import { jsonResult } from '../../tool-result.js';
 
-const inputSchema = z.object({
-  chat_id: z.union([z.number().int(), z.string().trim().min(1)]),
+const inputSchema = withRequiredChatTarget({
   source: mediaSourceSchema,
   caption: z.string().optional(),
   reply_to: z.number().int().positive().optional(),
@@ -27,10 +27,14 @@ const inputSchema = z.object({
 })
 @Injectable()
 export class SendPhotoTool implements TelegramMcpToolHandler {
+  public constructor(private readonly peerReferenceService: PeerReferenceService) {}
+
   public async execute(client: TelegramClient, input: unknown): Promise<CallToolResult> {
-    const { chat_id, source, caption, reply_to, silent, spoiler } = inputSchema.parse(input);
+    const params = inputSchema.parse(input);
+    const target = this.peerReferenceService.resolveTarget(params);
+    const { source, caption, reply_to, silent, spoiler } = params;
     const message = await client.sendMedia(
-      chat_id,
+      target,
       {
         type: 'photo',
         file: toInputFile(source),

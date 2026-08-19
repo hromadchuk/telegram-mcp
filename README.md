@@ -17,6 +17,20 @@ Telegram MCP connects your personal Telegram account to any AI client that suppo
 - Check Telegram Stars and gifts
 - Call almost any Telegram API method directly — not just the built-in tools
 
+## Connect your AI client
+
+Add your server URL as a remote MCP server:
+
+```text
+https://your-domain.example/mcp
+```
+
+The client will open a Telegram sign-in page. Enter your `api_id` and `api_hash`, then scan the QR code with the Telegram mobile app and finish the connection. If you use Codex, you can simply ask:
+
+```text
+Add this remote MCP server: https://your-domain.example/mcp
+```
+
 ## Run it locally
 
 You will need Node.js 20+, Yarn, and your own Telegram API credentials from [my.telegram.org/apps](https://my.telegram.org/apps).
@@ -41,20 +55,6 @@ yarn dev
 ```
 
 The web app runs at `http://127.0.0.1:5173`; the MCP server runs at `http://127.0.0.1:3000/mcp`.
-
-## Connect your AI client
-
-Add your server URL as a remote MCP server:
-
-```text
-https://your-domain.example/mcp
-```
-
-The client will open a Telegram sign-in page. Enter your `api_id` and `api_hash`, then scan the QR code with the Telegram mobile app and finish the connection. If you use Codex, you can simply ask:
-
-```text
-Add this remote MCP server: https://your-domain.example/mcp
-```
 
 ## Deploy
 

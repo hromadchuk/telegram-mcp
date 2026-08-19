@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/**', 'backend/dist/**', 'frontend/dist/**', 'shared/dist/**', '.yarn/**'],
+    ignores: ['node_modules/**', 'backend/dist/**', 'frontend/dist/**', '.yarn/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

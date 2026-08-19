@@ -5,13 +5,12 @@
   "packageManager": "yarn@4.18.0",
   "workspaces": [
     "frontend",
-    "backend",
-    "shared"
+    "backend"
   ],
   "scripts": {
-    "build": "yarn workspace @repo/shared build && yarn workspace @repo/backend build && yarn workspace @repo/frontend build",
+    "build": "yarn workspace @repo/backend build && yarn workspace @repo/frontend build",
     "dev": "yarn workspaces foreach -A -p -i -v --include @repo/frontend --include @repo/backend run dev",
-    "typecheck": "tsc --noEmit -p tsconfig.json && yarn workspace @repo/shared typecheck && yarn workspace @repo/backend typecheck && yarn workspace @repo/frontend typecheck",
+    "typecheck": "tsc --noEmit -p tsconfig.json && yarn workspace @repo/backend typecheck && yarn workspace @repo/frontend typecheck",
     "lint": "eslint ."
   },
   "devDependencies": {

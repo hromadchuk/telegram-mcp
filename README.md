@@ -33,6 +33,8 @@ Add this remote MCP server: https://telegram-mcp.hro.sh/mcp
 
 ## Run it locally
 
+You need Node.js 20+ and Yarn.
+
 ```bash
 corepack enable
 yarn install --immutable

@@ -1,4 +1,5 @@
 import githubLogo from '@/assets/logos/github.svg';
+import mtcuteLogo from '@/assets/logos/mtcute.png';
 import { ExternalLink, Heart } from 'lucide-react';
 
 import styles from '../LandingPage.module.css';
@@ -9,22 +10,29 @@ type ProjectFooterProps = { repositoryUrl: string };
 export function ProjectFooter({ repositoryUrl }: ProjectFooterProps) {
   return (
     <>
-      <section className={styles.opensource}>
-        <div>
-          <p className={styles.sectionKicker}>Open source</p>
-          <h2>
-            Open source.
-            <br />
-            Your rules.
-          </h2>
-        </div>
-        <div className={styles.opensourceCopy}>
-          <p>
-            Open source, transparent, and yours to build on. Self-host Telegram MCP or contribute to its future.
-          </p>
-          <a className={styles.darkButton} href={repositoryUrl} rel="noreferrer" target="_blank">
+      <section aria-label="Project details" className={styles.projectCards}>
+        <div className={styles.projectCard}>
+          <div className={styles.projectCardIcon}>
             <img alt="" className={styles.buttonGithubLogo} src={githubLogo} />
-            View on GitHub <ExternalLink aria-hidden="true" size={16} />
+          </div>
+          <div className={styles.projectCardContent}>
+            <h2>Open source</h2>
+            <p>Self-host it, inspect the code, or contribute.</p>
+          </div>
+          <a className={styles.projectCardLink} href={repositoryUrl} rel="noreferrer" target="_blank">
+            GitHub <ExternalLink aria-hidden="true" size={15} />
+          </a>
+        </div>
+        <div className={styles.projectCard}>
+          <div className={styles.projectCardIcon}>
+            <img alt="mtcute" className={styles.mtcuteLogo} src={mtcuteLogo} />
+          </div>
+          <div className={styles.projectCardContent}>
+            <h2>Built with mtcute</h2>
+            <p>Modern TypeScript access to the Telegram MTProto API.</p>
+          </div>
+          <a className={styles.projectCardLink} href="https://mtcute.dev/" rel="noreferrer" target="_blank">
+            mtcute.dev <ExternalLink aria-hidden="true" size={15} />
           </a>
         </div>
       </section>

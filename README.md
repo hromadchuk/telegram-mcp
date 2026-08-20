@@ -8,6 +8,8 @@ Use Telegram from your AI assistant.
 
 Telegram MCP connects your personal Telegram account to any AI client that supports the [Model Context Protocol](https://modelcontextprotocol.io/), such as Codex or Claude. Once connected, your assistant can search chats, read and send messages, work with files and media, and more.
 
+Powered by [mtcute](https://mtcute.dev/), a modern TypeScript library for the Telegram MTProto API.
+
 ## What it can do
 
 - Browse chats, contacts, and message history

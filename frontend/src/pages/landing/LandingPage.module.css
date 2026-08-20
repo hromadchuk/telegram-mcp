@@ -209,7 +209,7 @@
 .spark,
 .check {
   display: inline-block;
-  vertical-align: -2px;
+  vertical-align: -1px;
 }
 
 .aiMark,
@@ -438,6 +438,158 @@
 .footerGithubLogo {
   width: 14px;
   height: 14px;
+}
+
+.footerCreatorLink {
+  color: inherit;
+}
+
+.heartAnimation {
+  color: #ff4e50;
+  display: inline-block;
+  margin: 0 1px 0 0;
+  position: relative;
+  top: -2px;
+  vertical-align: -3px;
+  animation: heartAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes heartAnimation {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.15);
+  }
+  20% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.15);
+  }
+  40% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .page {
+    color: #dce6eb;
+    background: #101820;
+  }
+
+  .nav,
+  .features,
+  .footer,
+  .features article + article {
+    border-color: #2a3a45;
+  }
+
+  .brand {
+    color: #edf4f7;
+  }
+
+  .githubLink img,
+  .footerGithubLogo {
+    filter: invert(1);
+  }
+
+  .hero h1,
+  .sectionHeading h2,
+  .opensource h2 {
+    color: #f1f6f8;
+  }
+
+  .lead,
+  .sectionHeading > p:last-child,
+  .features p {
+    color: #aab9c2;
+  }
+
+  .note,
+  .installTitle p,
+  .installHint,
+  .footer {
+    color: #91a5b0;
+  }
+
+  .demoCard,
+  .installCard {
+    border-color: #2b3e49;
+    background: #182630;
+  }
+
+  .demoCard {
+    box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
+  }
+
+  .demoTop {
+    border-color: #2b3e49;
+    color: #a8b8c1;
+  }
+
+  .demoMenu,
+  .demoFooter {
+    color: #91a2ad;
+  }
+
+  .chat {
+    background: #13232c;
+  }
+
+  .userMessage {
+    background: #17465a;
+    color: #d6eef8;
+  }
+
+  .aiMessage {
+    background: #20313a;
+    color: #d9e4e9;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  }
+
+  .installSteps {
+    color: #b2c0c7;
+  }
+
+  .clientLogo {
+    background: #263842;
+  }
+
+  .codexLogo {
+    filter: invert(1);
+  }
+
+  .codeSnippet {
+    background: #12212a;
+  }
+
+  .codeSnippet code {
+    color: #c4d3da;
+  }
+
+  .copyButton {
+    background: #263a45;
+  }
+
+  .opensource {
+    background: #142a35;
+  }
+
+  .opensourceCopy p {
+    color: #b0c0c8;
+  }
+
+  .darkButton {
+    background: #285168;
+  }
+
+  .darkButton:hover {
+    background: #32647e;
+  }
 }
 
 @media (max-width: 760px) {

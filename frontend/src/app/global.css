@@ -3,6 +3,7 @@
   line-height: 1.5;
   color: #111;
   background: #fff;
+  color-scheme: light dark;
 }
 
 * {
@@ -11,4 +12,11 @@
 
 body {
   margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #dce6eb;
+    background: #101820;
+  }
 }

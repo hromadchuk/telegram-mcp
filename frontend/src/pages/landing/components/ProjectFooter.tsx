@@ -1,5 +1,5 @@
 import githubLogo from '@/assets/logos/github.svg';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Heart } from 'lucide-react';
 
 import styles from '../LandingPage.module.css';
 import { BrandMark } from './BrandMark';
@@ -33,7 +33,14 @@ export function ProjectFooter({ repositoryUrl }: ProjectFooterProps) {
           <BrandMark />
           <span>Telegram MCP</span>
         </a>
-        <span>The bridge between Telegram and AI</span>
+        <span>
+          Made with l
+          <Heart aria-hidden="true" className={styles.heartAnimation} size={9} strokeWidth={2.5} />
+          ve by{' '}
+          <a className={styles.footerCreatorLink} href="https://hro.sh" rel="noreferrer" target="_blank">
+            Pavlo Hromadchuk
+          </a>
+        </span>
         <a href={repositoryUrl} rel="noreferrer" target="_blank">
           <img alt="" className={styles.footerGithubLogo} src={githubLogo} /> GitHub{' '}
           <ExternalLink aria-hidden="true" size={12} />

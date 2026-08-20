@@ -258,6 +258,66 @@
   text-align: center;
 }
 
+@media (prefers-color-scheme: dark) {
+  .page {
+    color: #dce6eb;
+    background: #101820;
+  }
+
+  .header {
+    border-color: #2a3a45;
+  }
+
+  .brand,
+  .title {
+    color: #f1f6f8;
+  }
+
+  .card {
+    border-color: #2b3e49;
+    background: #182630;
+  }
+
+  .subtitle,
+  .formIntro,
+  .qrInstructions {
+    color: #aab9c2;
+  }
+
+  .label {
+    color: #c4d1d8;
+  }
+
+  .input {
+    border-color: #314651;
+    background: #13232c;
+    color: #edf4f7;
+  }
+
+  .input::placeholder {
+    color: #8094a0;
+  }
+
+  .input:hover {
+    border-color: #45616f;
+  }
+
+  .input:focus {
+    background: #162a34;
+  }
+
+  .error {
+    background: #3c2028;
+    color: #ffadb9;
+  }
+
+  .qrLoading,
+  .qrStatus,
+  .footer {
+    color: #91a5b0;
+  }
+}
+
 @media (max-width: 560px) {
   .shell {
     width: min(100% - 32px, 500px);

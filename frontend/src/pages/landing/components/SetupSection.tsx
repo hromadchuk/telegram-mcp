@@ -72,7 +72,7 @@ export function SetupSection({ mcpUrl }: SetupSectionProps) {
           <article className={styles.installCard} key={title}>
             <div className={styles.installTitle}>
               <span className={styles.clientLogo}>
-                <img alt={`${title} logo`} src={logo} />
+                <img alt={`${title} logo`} className={title === 'Codex' ? styles.codexLogo : undefined} src={logo} />
               </span>
               <div>
                 <h3>{title}</h3>
